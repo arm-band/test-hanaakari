@@ -1,4 +1,4 @@
-import { createMarkdown } from "safe-marked";
+import { createMarkdown } from 'safe-marked';
 const markdown = createMarkdown();
 
 window.addEventListener('load', () => {
