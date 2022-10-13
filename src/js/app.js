@@ -1,9 +1,51 @@
 import { createMarkdown } from 'safe-marked';
 const markdown = createMarkdown();
 
+const isStrDir = (str) => {
+    return typeof str === 'string' && str.slice(-1) === '/';
+};
+const isDomDir = (dom) => {
+    return dom.hasChildNodes();
+};
+
+const underOnlyOneHierarchyText = (elm) => {
+    let result = '';
+    for(const el of elm.childNodes) {
+        if(el.nodeName === "#text") {
+            result += el.nodeValue;
+        }
+    }
+    return result;
+}
+
+const dirWalker = (elm, /*file,*/ row) => {
+    row = row || '';
+    console.log(elm)
+    Array.prototype.forEach.call(elm, (el) => {
+//        if(isDomDir(el) && isStrDir(el.value())) {
+//
+//        }
+        console.log('hogeeeeeeeeeeeee')
+        // textContent だと子孫要素含めて全てのテキストを取得してしまうので、直下のみが欲しい
+        console.log(underOnlyOneHierarchyText(el));
+    })
+//    _.each(dirs, function(dir, dirName) {
+//        _.each(dir, function(child){
+//            if(isFile(child)) {
+//                if(child === file) {
+//                    console.log(row + dirName + '/' + child);
+//                }
+//            } else {
+//                lookDir(child, file, row += dirName + '/');
+//            }
+//        });
+//    });
+};
+
 window.addEventListener('load', () => {
-    const html = markdown(`
-- root/
+    // ├ └ │
+    const sampleDir = `
+- /
     - dist/
         - assets/
             - hoge.pdf
@@ -58,8 +100,12 @@ window.addEventListener('load', () => {
     - package.json
     - readme.md
     - webpack.config.js
-    `);
+    `
+    const html = markdown(sampleDir);
     console.log(html);
     const $tree = document.querySelector('#tree');
     $tree.innerHTML = html;
+    const $treeNode = document.querySelectorAll("#tree > ul");
+    console.log($treeNode)
+    dirWalker($treeNode, '');
 });
